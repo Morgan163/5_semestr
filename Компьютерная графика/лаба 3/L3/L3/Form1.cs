@@ -30,7 +30,7 @@ namespace L3
             fillMod(200, 200, Color.Red);
             fillMod(105,352,Color.White);
             fillMod(170, 352, Color.Green);
-            fillMod(352, 349, Color.Pink);
+            fillMod(352, 349, Color.Orange);
             pictureBox1.Image = bit;
         }
         public void drawCircle()
@@ -115,39 +115,39 @@ namespace L3
                 else error += m;
             }
         }
-        public void drawLine(int x0, int y0, int x1, int y1)
-        {
-            int x = x0;
-            int y = y0;
-            double dx = x1 - x0;
-            //if (dx < 0)
-            //{
-            //    dx *= -1;
-            //}
-            double dy = y1 - y0;
-            //if (dy < 0)
-            //{
-            //    dy *= -1;
-            //}
-            double m = dy / dx;
-            double e = m - 0.5;
-            int i = 0;
-            while (i < dx)
-            {
-                if (e >= 0)
-                {
-                    y++;
-                    e += m - 1;
-                }
-                else
-                {
-                    e += m;
-                }
-                x++;
-                bit.SetPixel(x, y, Color.Black);
-                i++;
-            }
-        }
+        //public void drawLine(int x0, int y0, int x1, int y1)
+        //{
+        //    int x = x0;
+        //    int y = y0;
+        //    double dx = x1 - x0;
+        //    //if (dx < 0)
+        //    //{
+        //    //    dx *= -1;
+        //    //}
+        //    double dy = y1 - y0;
+        //    //if (dy < 0)
+        //    //{
+        //    //    dy *= -1;
+        //    //}
+        //    double m = dy / dx;
+        //    double e = m - 0.5;
+        //    int i = 0;
+        //    while (i < dx)
+        //    {
+        //        if (e >= 0)
+        //        {
+        //            y++;
+        //            e += m - 1;
+        //        }
+        //        else
+        //        {
+        //            e += m;
+        //        }
+        //        x++;
+        //        bit.SetPixel(x, y, Color.Black);
+        //        i++;
+        //    }
+        //}
         public void fill(int x, int y)
         {
             bit.SetPixel(x,y,Color.Red);
