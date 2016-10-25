@@ -26,11 +26,13 @@ namespace L3
             drawBesye();
             drawLine2(70, 200, 254, 600,Color.Black);
             drawLine2(50, 350, 600, 350, Color.Black);
-            
+            drawLine2(50, 400, 400, 250, Color.Black);
+           
             fillMod(200, 200, Color.Red);
             fillMod(105,352,Color.White);
             fillMod(170, 352, Color.Green);
             fillMod(352, 349, Color.Orange);
+            fill(145, 351, 0);
             pictureBox1.Image = bit;
         }
         public void drawCircle()
@@ -77,7 +79,7 @@ namespace L3
                 bit.SetPixel((int)Px, (int)Py, Color.Black);
             }
         }
-        private void Swap(ref int x, ref int y)
+        private void blend(ref int x, ref int y)
         {
             int buff = x;
             x = y;
@@ -85,34 +87,34 @@ namespace L3
         }
         public void drawLine2(int x0, int y0, int x1, int y1, Color color)
         {
-            bool flg = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
+            bool b = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
 
-            if (flg)
+            if (b)
             {
-                Swap(ref x0, ref y0);
-                Swap(ref x1, ref y1);
+                blend(ref x0, ref y0);
+                blend(ref x1, ref y1);
             }
 
             if (x0 > x1)
             {
-                Swap(ref x0, ref x1);
-                Swap(ref y0, ref y1);
+                blend(ref x0, ref x1);
+                blend(ref y0, ref y1);
             }
             double dx = x1 - x0;
             double dy = Math.Abs(y1 - y0);
             double m = dy / dx;
-            double error = m - 0.5;
-            int ystep = (y0 < y1) ? 1 : -1;
+            double e = m - 0.5;
+            int step = (y0 < y1) ? 1 : -1;
             int y = y0;
             for (int x = x0; x <= x1; x++)
             {
-                bit.SetPixel(flg ? y : x, flg ? x : y, color);
-                if (error >= 0)
+                bit.SetPixel(b ? y : x, b ? x : y, color);
+                if (e >= 0)
                 {
-                    y += ystep;
-                    error += m - 1;
+                    y += step;
+                    e += m - 1;
                 }
-                else error += m;
+                else e += m;
             }
         }
         //public void drawLine(int x0, int y0, int x1, int y1)
@@ -148,24 +150,33 @@ namespace L3
         //        i++;
         //    }
         //}
-        public void fill(int x, int y)
+        public void fill(int x, int y, int i)
         {
-            bit.SetPixel(x,y,Color.Red);
-            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb()))&&!(Color.Red.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb())))
+            Color[] color = { Color.Purple, Color.Gold };
+            bit.SetPixel(x,y,color[i]);
+            if (i==0)
             {
-                fill(x + 1, y);
+                i=1;
             }
-            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x - 1, y).ToArgb()))&&!(Color.Red.ToArgb().Equals(bit.GetPixel(x - 1, y).ToArgb())))
+            else
             {
-                fill(x - 1, y);
+                i=0;
             }
-            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x, y+1).ToArgb()))&&!(Color.Red.ToArgb().Equals(bit.GetPixel(x, y+1).ToArgb())))
+            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb())) && !(Color.Gold.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb())) && !(Color.Purple.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb())))
             {
-                fill(x, y+1);
+                fill(x + 1, y, i);
             }
-            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x, y-1).ToArgb()))&&!(Color.Red.ToArgb().Equals(bit.GetPixel(x, y-1).ToArgb())))
+            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x - 1, y).ToArgb())) && !(Color.Gold.ToArgb().Equals(bit.GetPixel(x - 1, y).ToArgb())) && !(Color.Purple.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb())))
             {
-                fill(x, y-1);
+                fill(x - 1, y, i);
+            }
+            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x, y + 1).ToArgb())) && !(Color.Gold.ToArgb().Equals(bit.GetPixel(x, y + 1).ToArgb())) && !(Color.Purple.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb())))
+            {
+                fill(x, y+1, i);
+            }
+            if (!(Color.Black.ToArgb().Equals(bit.GetPixel(x, y - 1).ToArgb())) && !(Color.Gold.ToArgb().Equals(bit.GetPixel(x, y - 1).ToArgb())) && !(Color.Purple.ToArgb().Equals(bit.GetPixel(x + 1, y).ToArgb())))
+            {
+                fill(x, y-1, i);
             }
         }
 
@@ -186,25 +197,25 @@ namespace L3
                 xr++;
             }
             xr--;
-            int tmp_x = xl;
-            while ((tmp_x <= xr) && (y != 0))
+            int tmp = xl;
+            while ((tmp <= xr) && (y != 0))
             {
-                while ((tmp_x <= xr) && (bit.GetPixel(tmp_x, y - 1) != tmp_color))
+                while ((tmp <= xr) && (bit.GetPixel(tmp, y - 1) != tmp_color))
                 {
-                    tmp_x++;
+                    tmp++;
                 }
-                if (tmp_x <= xr) fillMod(tmp_x, y - 1, color);
-                tmp_x++;
+                if (tmp <= xr) fillMod(tmp, y - 1, color);
+                tmp++;
             }
-            tmp_x = xl;
-            while ((tmp_x <= xr) && (y + 1 != bit.Height))
+            tmp = xl;
+            while ((tmp <= xr) && (y + 1 != bit.Height))
             {
-                while ((tmp_x <= xr) && (bit.GetPixel(tmp_x, y + 1) != tmp_color))
+                while ((tmp <= xr) && (bit.GetPixel(tmp, y + 1) != tmp_color))
                 {
-                    tmp_x++;
+                    tmp++;
                 }
-                if (tmp_x <= xr) fillMod(tmp_x, y + 1, color);
-                tmp_x++;
+                if (tmp <= xr) fillMod(tmp, y + 1, color);
+                tmp++;
             }
         }
       
